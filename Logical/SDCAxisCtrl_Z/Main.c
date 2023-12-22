@@ -36,7 +36,6 @@ void _INIT ProgramInit(void)
 	// speed tn = 0.0005;
 	
 	pwm_period = 20;
-
 }
 
 void _CYCLIC ProgramCyclic(void)
@@ -52,7 +51,14 @@ void _CYCLIC ProgramCyclic(void)
 	AxisZ_EncIf.iActPos = axis_Z.counter;
 	AxisZ_DiDoIf.iPosHwEnd = axis_Z.endswitch_b_reached;
 	AxisZ_DiDoIf.iNegHwEnd = axis_Z.endswitch_a_reached;
-	fb_controller.in = AxisZ_DrvIf.oSetPos;
+	//fb_controller.in = AxisZ_DrvIf.oSetPos;
+	
+	// +1 -> up
+	// -1 -> down
+	if (timer<2000) fb_controller.in = speed_ctrl; //AxisZ_DrvIf.oSetPos;
+	else 			fb_controller.in = 0;
+	timer++;
+
 	
 	if((fb_controller.in<min_task)&&(fb_controller.in>(-min_task))) fb_controller.in = 0; 
 	fb_controller.in = fb_controller.in * 6500 / 32767 - axis_Z.speed;// 6500/32767 - axis_Y.speed
@@ -60,6 +66,7 @@ void _CYCLIC ProgramCyclic(void)
 	FB_Controller(&fb_controller);
 
 	axis_Z.pwm_value = fb_controller.out / 24.0 * 32767;
+
 
 }
 

@@ -1,4 +1,6 @@
 VAR
+	timer : UDINT := 0;
+	speed_ctrl : INT := -10000;
 	min_task : INT := 7000;
 	desired_speed : INT := 0;
 	axis_Z : FB_Axis;
